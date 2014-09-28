@@ -1,0 +1,139 @@
+/3.1/
+
+create table product(
+product_id varchar2(10) constraint p_id primary key,
+name varchar2(25),
+introduction_date date,
+sales_discontinuation_date date,
+support_discontinuation_date date,
+comment varchar2(60)
+);
+
+/3.2/
+
+create table party_type(
+party_type_Id varchar2(10) constraint pk_pt primary key,
+descr varchar2(60)
+);
+
+create table market_interest(
+from_date date constraint pk_mi primary key,
+thru_date date
+);
+
+create table product_category(
+product_category_id varchar2(10) constraint pk_pci primary key,
+description varchar2(60)
+);
+ 
+create table product_category_classification(
+from_date date constraint p_pcc primary key,
+thru_date date,
+primary_flag number,
+comment varchar2(60)
+);
+
+/3.3/
+
+create table identification_type(
+identification_type_id varchar2(10) constraint pk_it primary key,
+descr varchar2(60)
+);
+
+/3.4/
+
+create table product_feature_category
+product_feature_category_id varchar2(10) constraint pk_pfc primary key,
+descr varchar2(60)
+);
+
+create table unit_of_measure(
+uom_id varchar2(10) constraint pk_uom primary key,
+abbreviation varchar2(45),
+descr varchar2(60)
+);
+
+create table product_feature_applicability(
+form_date date constraint pk_pfa primary key,
+thru_date date
+);
+
+create table product_feature(
+product_feature_id varchar2(10) constraint pk_pf primary key,
+descr varchar2(60)
+);
+
+/3.5/
+
+create table rating_type(
+rating_type_id varchar2(10) constraint pk_rt primary key,
+descr varchar2(60)
+);
+
+create table preference_type(
+preference_type_id varchar2(10) constraint pk_pty primary key,
+descr varchar2(60)
+);
+
+create table supplier_product(
+available_from_date date constraint pk_spr primary key,
+available_thru_date date,
+standard_lead_time varchar2(15),
+comm varchar2(60)
+);
+
+create table reorder_guideline(
+reorder_guideline_id varchar2(10) constraint pk_rg primary key,
+from_date date,
+thru_date date,
+reorder_quantity number,
+reorder_level number
+);
+
+/3.6/
+
+create table container_type(
+container_type_id varchar2(10) constraint pk_cty primary key,
+descr varchar2(60)
+);
+
+create table lot(
+lot_id varchar2(10) constraint pk_lot primary key,
+creation_date date,
+quantity number,
+expiration_date date
+);
+
+create table inventory_item_status_type(
+inventory_item_status_type_id varchar2(10) constraint pk_iist primary key,
+descr varchar2(60),
+);
+
+create table good(
+good_id varchar2(10) constraint pk_go primary key,
+descr varchar2(60)
+);
+
+create table facility(
+facility_id varchar2(10) constraint pk_fac primary key,
+descr varchar2(60)
+);
+
+create table reason(
+reason_id varchar2(10) constraint pk_rea primary key,
+descr varchar2(60)
+);
+
+create table container(
+container_id varchar2(10) constraint pk_cont primary key
+);
+
+create table inventory_item_variance(
+physical_inventory_date date constraint pk_iiv primary key,
+quantity number,
+comm varchar2(60)
+);
+
+create table inventory_item(
+inventory_item_id varchar2(10) constraint pk_ii primary key
+);

@@ -6,7 +6,9 @@ name varchar2(25),
 introduction_date date,
 sales_discontinuation_date date,
 support_discontinuation_date date,
-comment varchar2(60)
+comment varchar2(60),
+uom_id varchar2(10),
+constraint fk_p1 foreign key(uom_id) references unit_of_measure
 );
 
 /3.2/
@@ -17,8 +19,13 @@ descr varchar2(60)
 );
 
 create table market_interest(
-from_date date constraint pk_mi primary key,
-thru_date date
+market_interest_id varchar2(10)  constraint pk_mi primary key,
+from_date date,
+thru_date date,
+party_type_id varchar2(10),
+product_category_id varchar2(10),
+constraint fk_mi1 foreign key (party_type_id) references party_type,
+constraint fk_mi2 foreign key (product_category_id) references product_category
 );
 
 create table product_category(
@@ -30,9 +37,19 @@ create table product_category_classification(
 from_date date constraint p_pcc primary key,
 thru_date date,
 primary_flag number,
-comment varchar2(60)
+comment varchar2(60),
+product_category_id varchar2(10),
+product_id varchar2(10),
+constraint pcc_fk1 foreign key (product_category_id) references product category,
+constraint pcc_fk2 foreign key (product_id) references product
 );
 
+create table product_category_rollup(
+party_type_id varchar2(10),
+product_category_id varchar2(10),
+constraint fk_pcr1 foreign key (party_type_id) references party_type,
+constraint fk_pcr2 foreign key (product_category_id) references product_category
+)
 /3.3/
 
 create table identification_type(
@@ -40,6 +57,13 @@ identification_type_id varchar2(10) constraint pk_it primary key,
 descr varchar2(60)
 );
 
+create table good_identification(
+id_value varchar2(10) constraint pk_gi primary key,
+product_id varchar2(10),
+identification_type_id varchar2(10),
+constraint fk_gi1 foreign key (identification_type_id) references identification_type,
+constraint fkgi2 foreign key (product_id) references product
+)
 /3.4/
 
 create table product_feature_category
@@ -54,14 +78,31 @@ descr varchar2(60)
 );
 
 create table product_feature_applicability(
-form_date date constraint pk_pfa primary key,
-thru_date date
+product_feature_applicability_id varchar2(10) constraint pk_pfa primary key,
+form_date date,
+thru_date date,
+product_feature_id varchar2(10),
+product_id varchar2(10),
+constraint fk_pfa2 foreign key(product_id) references product,
+constraint fk_pfa1 foreign key(product_feature_id) references product_feature
 );
 
 create table product_feature(
 product_feature_id varchar2(10) constraint pk_pf primary key,
-descr varchar2(60)
+descr varchar2(60),
+product_feature_category_id varchar2(10),
+constraint fk_pf1 foreign key (product_feature_category_id) references product_feature_category
 );
+create table product_feature_interaction(
+product_feature_interaction_id varchar2(10) constraint pk_pfi1 primary key,
+product_feature_id_of varchar2(10),
+product_feature_id_factor_in  varchar2(10),
+product_id varchar2(10),
+constraint fk_pfi1 (product_id) foreign key references product,
+constraint fk_pfi2 (product_feature_of) foreign key references product_feature,
+constraint fk_pfi3 (product_feature_factor_in) foreign key references product_feature
+
+)
 
 /3.5/
 

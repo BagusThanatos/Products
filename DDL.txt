@@ -15,7 +15,7 @@ constraint fk_p1 foreign key(uom_id) references unit_of_measure
 
 create table party_type(
 party_type_Id varchar2(10) constraint pk_pt primary key,
-descr varchar2(60)
+description varchar2(60)
 );
 
 create table market_interest(
@@ -54,7 +54,7 @@ constraint fk_pcr2 foreign key (product_category_id) references product_category
 
 create table identification_type(
 identification_type_id varchar2(10) constraint pk_it primary key,
-descr varchar2(60)
+description varchar2(60)
 );
 
 create table good_identification(
@@ -68,13 +68,13 @@ constraint fkgi2 foreign key (product_id) references product
 
 create table product_feature_category
 product_feature_category_id varchar2(10) constraint pk_pfc primary key,
-descr varchar2(60)
+description varchar2(60)
 );
 
 create table unit_of_measure(
 uom_id varchar2(10) constraint pk_uom primary key,
 abbreviation varchar2(45),
-descr varchar2(60)
+description varchar2(60)
 );
 
 create table product_feature_applicability(
@@ -89,7 +89,7 @@ constraint fk_pfa1 foreign key(product_feature_id) references product_feature
 
 create table product_feature(
 product_feature_id varchar2(10) constraint pk_pf primary key,
-descr varchar2(60),
+description varchar2(60),
 product_feature_category_id varchar2(10),
 constraint fk_pf1 foreign key (product_feature_category_id) references product_feature_category
 );
@@ -108,19 +108,25 @@ constraint fk_pfi3 (product_feature_factor_in) foreign key references product_fe
 
 create table rating_type(
 rating_type_id varchar2(10) constraint pk_rt primary key,
-descr varchar2(60)
+description varchar2(60)
 );
 
 create table preference_type(
 preference_type_id varchar2(10) constraint pk_pty primary key,
-descr varchar2(60)
+description varchar2(60)
 );
 
 create table supplier_product(
 available_from_date date constraint pk_spr primary key,
 available_thru_date date,
 standard_lead_time varchar2(15),
-comm varchar2(60)
+comm varchar2(60),
+rating_type_id varchar2(10),
+preference_type_id varchar2(10),
+product_id varchar2(10),
+constraint fk_sp1 foreign key (rating_type_id) references rating_type,
+constraint fk_sp2 foreign key (preference_type_id) references preference_type,
+constraint fk_sp3 foreign key (product_id) references product
 );
 
 create table reorder_guideline(
@@ -128,14 +134,22 @@ reorder_guideline_id varchar2(10) constraint pk_rg primary key,
 from_date date,
 thru_date date,
 reorder_quantity number,
-reorder_level number
+reorder_level number,
+product_id varchar2(10),
+facility_id varchar2(10),
+constraint fk_rg1 foreign key(product_id) references product,
+constraint fk_rg2 foreign key(facility_id) references facility
 );
+create table facility(
+facility_id varchar2(10) constraint pk_f1 primary key,
+description varchar2(50)
+)
 
 /3.6/
 
 create table container_type(
 container_type_id varchar2(10) constraint pk_cty primary key,
-descr varchar2(60)
+description varchar2(60)
 );
 
 create table lot(
@@ -147,34 +161,162 @@ expiration_date date
 
 create table inventory_item_status_type(
 inventory_item_status_type_id varchar2(10) constraint pk_iist primary key,
-descr varchar2(60),
+description varchar2(60)
 );
 
 create table good(
 good_id varchar2(10) constraint pk_go primary key,
-descr varchar2(60)
+description varchar2(60)
 );
 
-create table facility(
-facility_id varchar2(10) constraint pk_fac primary key,
-descr varchar2(60)
-);
 
 create table reason(
 reason_id varchar2(10) constraint pk_rea primary key,
-descr varchar2(60)
+description varchar2(60)
 );
 
 create table container(
-container_id varchar2(10) constraint pk_cont primary key
+container_id varchar2(10) constraint pk_cont primary key,
+description varchar2(50)
 );
 
 create table inventory_item_variance(
 physical_inventory_date date constraint pk_iiv primary key,
 quantity number,
-comm varchar2(60)
+comm varchar2(60),
+reason_id varchar2(10),
+constraint fk_iiv1 foreign key (reason_id) references reason
 );
 
 create table inventory_item(
 inventory_item_id varchar2(10) constraint pk_ii primary key
+description varchar2(50),
+facility_id varchar2(10),
+container_id varchar2(10),
+constraint fk_ii1 foreign key (facility_id) references facility,
+constraint fk_ii2 foreing key (container_id) references container
+);
+
+/3.7/
+create table quantity_break(
+quantity_break_id varchar2(10) constraint pk_qb1 primary key,
+from_quantity number,
+thru_quantity number
+);
+create table sale_type(
+sale_type_id varchar2(10) constraint pk_st1 primary key,
+description varchar2(50)
+);
+create table order_value(
+order_value_id varchar2(10) constraint pk_ov1 primary key,
+from_amount number,
+thru_amount number
+);
+create table price_component(
+price_component_id varchar2(10) constraint pk_pc1 primary key,
+from_date date,
+thru_date date,
+price number,
+percent number,
+comment varchar2(50),
+party_type_id varchar2(10),
+quantity_break_ id varchar2(10),
+order_value_id varchar2(10),
+sale_type_id varchar2(10),
+product_id varchar2(10),
+product_feature_id varchar2(10),
+constraint fk_pc1 foreign key (party_type_id) references party_type,
+constraint fk_pc2 foreign key (quantity_break_id) references quantity_break,
+constraint fk_pc3 foreign key (order_value_id) references order_value,
+constraint fk_pc4 foreign key (sale_type_id) references sale_type,
+constraint fk_pc5 foreign key (product_id) references product,
+constraint fk_pc6 foreign key (product_feature_id) references product_feature
+);
+
+/3.8/
+create table cost_component_type(
+cost_component_type_id varchar2(10) constraint pk_cct1 primary key,
+description varchar2(50)
+);
+create table estimated_product_cost(
+cost_component_id varchar2(10) constraint pk_epc1 primary key,
+from_date date,
+thru_date date,
+cost number
+);
+
+/3.9/
+
+create table product_association_type(
+prod_assoc_type_id varchar2(10) constraint pk_pat1 primary key,
+description varchar2(50)
+);
+create table product_association(
+product_association_id varchar2(10) constraint pk_pa1 primary key,
+from_date date,
+thru_date date,
+prod_assoc_type_id varchar2(10),
+constraint fk_pass1 foreign key (prod_assoc_type_id) primary key
+);
+create table marketing_package(
+product_association_id varchar2(10) constraint pk_mp1 primary key ,
+quantity_used number,
+instruction varchar2(50),
+comm varchar2(50),
+constraint fk_mp1 foreign key(product_association_id) references product_association
+);
+create table product_substitute(
+product_association_id varchar2(10) constraint pk_ps1 primary key,
+quantity number,
+comm varchar2(50),
+constraint fk_ps1 foreign key(product_association_id) references product_association
+);
+create table product_obsolence(
+product_association_id varchar2(10) constraint pk_po1 primary key,
+reason varchar2(10),
+constraint fk_po1 foreign key(product_association_id) references product_association
+);
+create table product_complement(
+product_association_id varchar2(10) constraint pk_pc1 primary key,
+reason varchar2(10),
+constraint fk_po1 foreign key(product_association_id) references product_association
+);
+create table product_incompatibility(
+product_association_id varchar2(10) constraint pk_pin1 primary key,
+reason varchar2(10),
+constraint fk_po1 foreign key(product_association_id) references product_association
+);
+create table association_from(
+product_id varchar2(10),
+prod_association_id varchar2(10),
+constraint fk_af1 foreign key (product_id) references product,
+constraint fk_af2 foreign key (prod_association_id) references product_association
+);
+create table association_to(
+product_id varchar2(10),
+prod_association_id varchar2(10),
+constraint fk_at1 foreign key (product_id) references product,
+constraint fk_at2 foreign key (prod_association_id) references product_association
+);
+
+/3.10/
+create table product_component(
+product_component_id varchar2(10) constraint pk_pcom1 primary key,
+from_date date,
+thru_date date,
+quantity_used number,
+instruction varchar2(50),
+comm varchar2(50)
+);
+create table made_up_of(
+product_id varchar2(10),
+product_component_id varchar2(10),
+constraint fk_mdo1 foreign key (product_id) references product,
+constraint fk_mdo2 foreign key (product_component_id) references product_component
+);
+create table used_in(
+product_id varchar2(10),
+product_component_id varchar2(10),
+constraint fk_ui1 foreign key (product_id) references product,
+constraint fk_ui2 foreign key (product_component_id) references product_component
 );

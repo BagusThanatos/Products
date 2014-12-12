@@ -41,3 +41,5 @@ Icon
 /Program/Client/dist/
 /Program/Server/build/
 /Program/Server/dist/
+/Program/Products_Client/nbproject/private/
+/Program/Products_Server/nbproject/private/

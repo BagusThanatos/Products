@@ -21,7 +21,7 @@ public class Server {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        Database d = new Database(); System.out.println("success connecting to database database");
         ServerSocket s;
         try {
             s= new ServerSocket(9999);

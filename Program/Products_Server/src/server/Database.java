@@ -32,7 +32,7 @@ public class Database {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }*/
         try {
-            con = DriverManager.getConnection("jdbc:mysql://localhost/TPModul10",username,pass);
+            con = DriverManager.getConnection("jdbc:mysql://localhost/products",username,pass);
             stmt= con.createStatement();
         } catch (SQLException e){
             e.printStackTrace();
